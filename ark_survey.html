@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方舟計畫 · AI 跨域產出者問卷</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+ --mustard: #E8B800;
+ --mustard-light: #FFF6CC;
+ --mustard-mid: #F5D84A;
+ --terracotta: #E85D3A;
+ --olive: #6B8E23;
+ --dusty-blue: #4A7BA6;
+ --beige: #F5F1E8;
+ --card: #FDFAF3;
+ --dark: #1C1A14;
+ --dark2: #2A2720;
+ --text: #38342A;
+ --muted: #857E6E;
+ --border: #DDD6C4;
+ --border-focus: #E8B800;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+ font-family: 'Noto Sans TC', sans-serif;
+ background: var(--beige);
+ color: var(--text);
+ min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.form-header {
+ background: var(--dark);
+ color: #F0EAD8;
+ padding: 48px 24px 40px;
+ text-align: center;
+ position: relative;
+ overflow: hidden;
+}
+.form-header::before {
+ content: '';
+ position: absolute; top: -80px; left: -80px;
+ width: 260px; height: 260px;
+ background: radial-gradient(circle, var(--mustard) 0%, transparent 70%);
+ opacity: 0.12; pointer-events: none;
+}
+.form-header::after {
+ content: '';
+ position: absolute; bottom: -60px; right: -60px;
+ width: 200px; height: 200px;
+ background: radial-gradient(circle, var(--terracotta) 0%, transparent 70%);
+ opacity: 0.12; pointer-events: none;
+}
+.ark-eyebrow {
+ display: inline-flex; align-items: center; gap: 6px;
+ background: var(--mustard); color: var(--dark);
+ font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+ padding: 4px 14px; border-radius: 2px;
+ margin-bottom: 20px; text-transform: uppercase;
+}
+.form-header h1 {
+ font-family: 'Noto Serif TC', serif;
+ font-size: clamp(22px, 5vw, 30px);
+ font-weight: 700; line-height: 1.35;
+ margin-bottom: 14px;
+}
+.form-header p {
+ font-size: 14px; color: #A09880;
+ max-width: 500px; margin: 0 auto;
+ line-height: 1.75;
+}
+
+/* ── PROGRESS ── */
+.progress-wrap {
+ background: var(--dark2);
+ padding: 14px 24px;
+ position: sticky; top: 0; z-index: 50;
+ display: flex; align-items: center; gap: 14px;
+}
+.progress-dots {
+ display: flex; gap: 5px; flex: 1;
+}
+.pdot {
+ height: 4px; flex: 1; border-radius: 2px;
+ background: rgba(255,255,255,0.12);
+ transition: background 0.4s ease;
+}
+.pdot.on { background: var(--mustard); }
+.progress-text {
+ font-size: 12px; color: #7A7060; white-space: nowrap;
+}
+
+/* ── BODY ── */
+.form-body {
+ max-width: 640px;
+ margin: 0 auto;
+ padding: 36px 20px 100px;
+}
+
+/* ── STEP ── */
+.step { display: none; }
+.step.active {
+ display: block;
+ animation: fadeUp 0.35s ease;
+}
+@keyframes fadeUp {
+ from { opacity: 0; transform: translateY(14px); }
+ to { opacity: 1; transform: translateY(0); }
+}
+
+.step-tag {
+ display: inline-block;
+ font-size: 11px; font-weight: 700;
+ letter-spacing: 0.12em; text-transform: uppercase;
+ color: var(--terracotta); margin-bottom: 6px;
+}
+.step-title {
+ font-family: 'Noto Serif TC', serif;
+ font-size: 22px; font-weight: 700;
+ color: var(--dark); margin-bottom: 6px;
+}
+.step-desc {
+ font-size: 13px; color: var(--muted);
+ line-height: 1.65; margin-bottom: 28px;
+}
+.step-divider {
+ height: 1px; background: var(--border);
+ margin-bottom: 28px;
+}
+
+/* ── QUESTION ── */
+.question { margin-bottom: 30px; }
+
+.q-label {
+ font-size: 15px; font-weight: 500;
+ color: var(--dark); line-height: 1.55;
+ margin-bottom: 6px;
+ display: flex; gap: 8px; align-items: flex-start;
+}
+.q-num {
+ color: var(--mustard); font-weight: 700;
+ font-size: 13px; margin-top: 2px; flex-shrink: 0;
+}
+.q-hint {
+ font-size: 12px; color: var(--muted);
+ margin-bottom: 12px; padding-left: 22px;
+}
+
+/* ── OPTIONS ── */
+.opts { display: flex; flex-direction: column; gap: 7px; }
+
+.opt { position: relative; }
+.opt input { position: absolute; opacity: 0; width: 0; height: 0; }
+
+.opt-label {
+ display: flex; align-items: center; gap: 10px;
+ padding: 12px 16px;
+ background: var(--card);
+ border: 1.5px solid var(--border);
+ border-radius: 9px;
+ font-size: 14px; color: var(--text); line-height: 1.45;
+ cursor: pointer;
+ transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.opt-label:hover {
+ border-color: var(--mustard);
+ background: #FFFDF0;
+ box-shadow: 0 2px 8px rgba(232,184,0,0.08);
+}
+.opt input:checked + .opt-label {
+ border-color: var(--mustard);
+ background: var(--mustard-light);
+ color: var(--dark); font-weight: 500;
+ box-shadow: 0 2px 8px rgba(232,184,0,0.12);
+}
+
+.opt-dot {
+ width: 18px; height: 18px; border-radius: 50%;
+ border: 2px solid var(--border); flex-shrink: 0;
+ display: flex; align-items: center; justify-content: center;
+ transition: all 0.15s;
+}
+.opt input[type="checkbox"] + .opt-label .opt-dot {
+ border-radius: 5px;
+}
+.opt input:checked + .opt-label .opt-dot {
+ background: var(--mustard); border-color: var(--mustard);
+}
+.opt input:checked + .opt-label .opt-dot::after {
+ content: ''; font-size: 11px; color: var(--dark); font-weight: 800;
+}
+
+.opt-emoji { font-size: 17px; flex-shrink: 0; }
+.opt-text { flex: 1; }
+
+/* other field */
+.other-input-wrap { margin-top: 6px; padding-left: 4px; display: none; }
+.other-input-wrap input {
+ width: 100%; padding: 11px 14px;
+ border: 1.5px solid var(--border); border-radius: 8px;
+ font-size: 14px; font-family: inherit;
+ background: var(--card); color: var(--text);
+ outline: none; transition: border 0.15s;
+}
+.other-input-wrap input:focus { border-color: var(--mustard); }
+
+/* ── TEXT / EMAIL INPUT ── */
+.t-input {
+ width: 100%; padding: 13px 16px;
+ border: 1.5px solid var(--border); border-radius: 9px;
+ font-size: 14px; font-family: inherit;
+ background: var(--card); color: var(--text);
+ outline: none; transition: border 0.15s;
+}
+.t-input:focus { border-color: var(--mustard); }
+textarea.t-input { min-height: 100px; resize: vertical; }
+
+/* ── ERRORS ── */
+.err { font-size: 12px; color: var(--terracotta); margin-top: 6px; display: none; }
+.question.invalid .err { display: block; }
+.question.invalid .opt-label,
+.question.invalid .t-input { border-color: var(--terracotta) !important; }
+
+/* ── YES / NO BIG CARDS ── */
+.yn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.yn-opt { position: relative; }
+.yn-opt input { position: absolute; opacity: 0; width: 0; height: 0; }
+.yn-label {
+ display: flex; flex-direction: column; align-items: center;
+ justify-content: center; gap: 10px;
+ padding: 32px 20px;
+ background: var(--card); border: 1.5px solid var(--border);
+ border-radius: 14px; cursor: pointer; transition: all 0.18s;
+ text-align: center;
+}
+.yn-label:hover { border-color: var(--mustard); background: #FFFDF0; }
+.yn-opt input:checked + .yn-label {
+ border-color: var(--mustard); background: var(--mustard-light);
+ box-shadow: 0 4px 16px rgba(232,184,0,0.14);
+}
+.yn-icon { font-size: 32px; }
+.yn-text { font-size: 16px; font-weight: 600; color: var(--dark); }
+
+/* ── BUTTONS ── */
+.btn-row {
+ display: flex; gap: 10px; margin-top: 36px;
+ padding-top: 24px; border-top: 1px solid var(--border);
+}
+.btn {
+ padding: 13px 26px; border-radius: 9px;
+ font-size: 14px; font-family: inherit; font-weight: 600;
+ cursor: pointer; border: none; transition: all 0.18s;
+}
+.btn-next { background: var(--mustard); color: var(--dark); flex: 1; }
+.btn-next:hover { background: #D4A800; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,184,0,0.25); }
+.btn-back { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+.btn-back:hover { border-color: var(--muted); color: var(--text); }
+.btn-submit { background: var(--terracotta); color: #fff; flex: 1; }
+.btn-submit:hover { background: #D44E2C; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,93,58,0.28); }
+
+/* ── THANK YOU ── */
+.thankyou { display: none; text-align: center; padding: 60px 20px 40px; }
+.thankyou.active { display: block; animation: fadeUp 0.4s ease; }
+.ty-icon { font-size: 60px; margin-bottom: 20px; }
+.thankyou h2 {
+ font-family: 'Noto Serif TC', serif;
+ font-size: 26px; font-weight: 700;
+ color: var(--dark); margin-bottom: 12px;
+}
+.thankyou p { font-size: 14px; color: var(--muted); line-height: 1.75; max-width: 420px; margin: 0 auto 28px; }
+.ty-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 28px; }
+.ty-pill {
+ display: inline-flex; align-items: center; gap: 6px;
+ padding: 8px 16px;
+ background: var(--card); border: 1px solid var(--border);
+ border-radius: 100px; font-size: 13px; color: var(--text);
+}
+.ty-quote {
+ font-family: 'Noto Serif TC', serif;
+ font-size: 13px; font-style: italic;
+ color: var(--muted); margin-top: 24px;
+}
+
+/* ── MAX-SELECT badge ── */
+.max-badge {
+ display: inline-block;
+ background: #E8F0E1; color: var(--olive);
+ font-size: 11px; font-weight: 600; padding: 2px 9px;
+ border-radius: 4px; margin-left: 6px; vertical-align: middle;
+}
+
+@media (max-width: 480px) {
+ .yn-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="form-header">
+ <div class="ark-eyebrow"> 方舟計畫 · Project Ark</div>
+ <h1>AI 跨域產出者問卷</h1>
+ <p>感謝你今天參加 AI 方舟啟航！這份問卷約 5 分鐘，會幫助我們確認方舟計畫的方向。填完的人會收到方舟計畫的初期規劃與第一批優先試用名單登記，敬請期待！！</p>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+ <div class="progress-dots">
+ <div class="pdot on" id="pd1"></div>
+ <div class="pdot" id="pd2"></div>
+ <div class="pdot" id="pd3"></div>
+ <div class="pdot" id="pd4"></div>
+ <div class="pdot" id="pd5"></div>
+ </div>
+ <div class="progress-text" id="progress-text">第 1 頁，共 5 頁</div>
+</div>
+
+<div class="form-body">
+
+<!-- ════════════════ STEP 1 ════════════════ -->
+<div class="step active" id="step1">
+ <div class="step-tag">Section A</div>
+ <div class="step-title">你的工作樣貌？</div>
+ <div class="step-divider"></div>
+
+ <!-- A0 -->
+ <div class="question" id="q-a0">
+ <div class="q-label"><span class="q-num">A0</span><span>請問你目前的主要職業／專業領域是？ <span style="color:var(--terracotta)">*</span></span></div>
+ <div class="opts">
+ <label class="opt"><input type="radio" name="a0" value="設計（視覺、UI/UX、產品、品牌）"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">設計（視覺、UI/UX、產品、品牌）</span></span></label>
+ <label class="opt"><input type="radio" name="a0" value="工程／開發（前端、後端、資料、AI／ML）"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">工程／開發（前端、後端、資料、AI／ML）</span></span></label>
+ <label class="opt"><input type="radio" name="a0" value="產品經理／專案管理"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">產品經理／專案管理</span></span></label>
+ <label class="opt"><input type="radio" name="a0" value="行銷／公關／品牌"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">行銷／公關／品牌</span></span></label>
+ <label class="opt"><input type="radio" name="a0" value="內容創作／文字工作（編輯、文案、自媒體）"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">內容創作／文字工作（編輯、文案、自媒體）</span></span></label>
+ <label class="opt"><input type="radio" name="a0" value="業務／商務開發／顧問"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">業務／商務開發／顧問</span></span></label>
+ <label class="opt"><input type="radio" name="a0" value="人資／招募／組織發展"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">人資／招募／組織發展</span></span></label>
+ <label class="opt"><input type="radio" name="a0" value="營運／行政／客服"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">營運／行政／客服</span></span></label>
+ <label class="opt"><input type="radio" name="a0" value="教育／講師／培訓"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">教育／講師／培訓</span></span></label>
+ <label class="opt"><input type="radio" name="a0" value="創業者／團隊負責人"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">創業者／團隊負責人</span></span></label>
+ <label class="opt"><input type="radio" name="a0" value="我同時跨多個領域，難以歸類"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">我同時跨多個領域，難以歸類</span></span></label>
+ <label class="opt" id="a0-other-opt"><input type="radio" name="a0" value="other" onchange="toggleOther('a0-other', this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">其他</span></span></label>
+ </div>
+ <div class="other-input-wrap" id="a0-other"><input type="text" placeholder="請說明…" id="a0-other-val"></div>
+ <div class="err">此題為必填</div>
+ </div>
+
+ <!-- A1 -->
+ <div class="question" id="q-a1">
+ <div class="q-label"><span class="q-num">A1</span><span>你現在的工作模式是？ <span style="color:var(--terracotta)">*</span></span></div>
+ <div class="opts">
+ <label class="opt"><input type="radio" name="a1" value="正職員工（上班族）"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">正職員工（上班族）</span></span></label>
+ <label class="opt"><input type="radio" name="a1" value="正職員工（遠端工作/混合遠端）"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">正職員工（遠端工作/混合遠端）</span></span></label>
+ <label class="opt"><input type="radio" name="a1" value="接案／自由工作者"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">接案／自由工作者</span></span></label>
+ <label class="opt"><input type="radio" name="a1" value="正職＋接案混合"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">正職＋接案混合</span></span></label>
+ <label class="opt"><input type="radio" name="a1" value="自己創業／團隊負責人"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">自己創業／團隊負責人</span></span></label>
+ <label class="opt"><input type="radio" name="a1" value="求職中／轉職中"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">求職中／轉職中</span></span></label>
+ <label class="opt"><input type="radio" name="a1" value="兼職 / 打工"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">兼職 / 打工</span></span></label>
+ <label class="opt"><input type="radio" name="a1" value="學生"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">學生</span></span></label>
+ </div>
+ <div class="err">此題為必填</div>
+ </div>
+
+ <!-- A2 -->
+ <div class="question" id="q-a2">
+ <div class="q-label"><span class="q-num">A2</span><span>過去三個月，你用 AI 工具完成的工作中，哪一項最跨越你原本的職業邊界？ <span style="color:var(--terracotta)">*</span><span class="max-badge">最多選 2 個</span></span></div>
+ <div class="opts">
+ <label class="opt"><input type="checkbox" name="a2" value="視覺（Midjourney、Nano Banana、ChatGPT Image 等）" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">用 AI 做出原本要靠設計師才能完成的視覺（Midjourney、Nano Banana、ChatGPT Image 等）</span></span></label>
+ <label class="opt"><input type="checkbox" name="a2" value="產品或網站（Cursor、Claude、Lovable 等）" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">用 AI 做出原本要靠工程師才能完成的產品或網站（Cursor、Claude、Lovable 等）</span></span></label>
+ <label class="opt"><input type="checkbox" name="a2" value="內容（ChatGPT、Claude 寫稿、企劃等）" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">用 AI 做出原本要靠行銷／文案才能完成的內容（ChatGPT、Claude 寫稿、企劃等）</span></span></label>
+ <label class="opt"><input type="checkbox" name="a2" value="自動化流程（n8n、Claude、Zapier 等）" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">用 AI 串起原本要靠工程師才能完成的自動化流程（n8n、Claude、Zapier 等）</span></span></label>
+ <label class="opt"><input type="checkbox" name="a2" value="一個人同時做了上面的兩種以上" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">一個人同時做了上面的兩種以上</span></span></label>
+ <label class="opt"><input type="checkbox" name="a2" value="都沒有，AI 主要是輔助我原本的工作" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">都沒有，AI 主要是輔助我原本的工作</span></span></label>
+ <label class="opt"><input type="checkbox" name="a2" value="other" data-max="2" onchange="checkMax(this); toggleOther('a2-other', this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">其他</span></span></label>
+ </div>
+ <div class="other-input-wrap" id="a2-other"><input type="text" placeholder="請說明…" id="a2-other-val"></div>
+ <div class="err">此題為必填（至少選 1 個）</div>
+ </div>
+
+ <div class="btn-row">
+ <button class="btn btn-next" onclick="goNext(1)">下一步 →</button>
+ </div>
+</div>
+
+<!-- ════════════════ STEP 2 ════════════════ -->
+<div class="step" id="step2">
+ <div class="step-tag">Section B</div>
+ <div class="step-title">你真實找尋工作／接案機會的現狀？</div>
+ <div class="step-divider"></div>
+
+ <!-- B1 -->
+ <div class="question" id="q-b1">
+ <div class="q-label"><span class="q-num">B1</span><span>過去半年，你最近一次「找到新案源／新合作對象」的管道是？ <span style="color:var(--terracotta)">*</span></span></div>
+ <div class="opts">
+ <label class="opt"><input type="radio" name="b1" value="朋友介紹／口碑"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">朋友介紹／口碑</span></span></label>
+ <label class="opt"><input type="radio" name="b1" value="LinkedIn"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">LinkedIn</span></span></label>
+ <label class="opt"><input type="radio" name="b1" value="接案平台（Tasker、Pro360、Fiverr 等）"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">接案平台（Tasker、Pro360、Fiverr 等）</span></span></label>
+ <label class="opt"><input type="radio" name="b1" value="社群活動現場認識"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">社群活動現場認識</span></span></label>
+ <label class="opt"><input type="radio" name="b1" value="自媒體（IG／Threads／部落格）追蹤者主動聯繫"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">自媒體（IG／Threads／部落格）追蹤者主動聯繫</span></span></label>
+ <label class="opt"><input type="radio" name="b1" value="沒找過／目前沒有需要"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">沒找過／目前沒有需要</span></span></label>
+ </div>
+ <div class="err">此題為必填</div>
+ </div>
+
+ <!-- B2 -->
+ <div class="question" id="q-b2">
+ <div class="q-label"><span class="q-num">B2</span><span>當陌生需求方第一次評估你時，你最希望他們看到的是？<span style="color:var(--terracotta)">*</span><span class="max-badge">請選 2 個</span></span></div>
+ <div class="opts">
+ <label class="opt"><input type="checkbox" name="b2" value="過去的職稱與年資" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">過去的職稱與年資</span></span></label>
+ <label class="opt"><input type="checkbox" name="b2" value="完整作品集" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">完整作品集</span></span></label>
+ <label class="opt"><input type="checkbox" name="b2" value="第三方背書（社群、合作過的人推薦）" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">第三方背書（社群、合作過的人推薦）</span></span></label>
+ <label class="opt"><input type="checkbox" name="b2" value="具體案例的拆解與你的思考" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">具體案例的拆解與你的思考</span></span></label>
+ <label class="opt"><input type="checkbox" name="b2" value="AI 工具熟練度與實戰證明" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">AI 工具熟練度與實戰證明</span></span></label>
+ <label class="opt"><input type="checkbox" name="b2" value="一張能濃縮所有關鍵資訊的「人才卡」" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">一張能濃縮所有關鍵資訊的「人才卡」</span></span></label>
+ <label class="opt"><input type="checkbox" name="b2" value="other" data-max="2" onchange="checkMax(this); toggleOther('b2-other', this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">其他</span></span></label>
+ </div>
+ <div class="other-input-wrap" id="b2-other"><input type="text" placeholder="請說明…" id="b2-other-val"></div>
+ <div class="err">此題為必填（至少選 1 個）</div>
+ </div>
+
+ <!-- B3 -->
+ <div class="question" id="q-b3">
+ <div class="q-label"><span class="q-num">B3</span><span>你曾經用 AI 完成工作，但選擇不主動說「這是用 AI 做的」嗎？ <span style="color:var(--terracotta)">*</span></span></div>
+ <div class="opts">
+ <label class="opt"><input type="radio" name="b3" value="經常如此"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">經常如此</span></span></label>
+ <label class="opt"><input type="radio" name="b3" value="偶爾如此"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">偶爾如此</span></span></label>
+ <label class="opt"><input type="radio" name="b3" value="從不隱藏"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">從不隱藏</span></span></label>
+ <label class="opt"><input type="radio" name="b3" value="不清楚／沒想過"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">不清楚／沒想過</span></span></label>
+ </div>
+ <div class="err">此題為必填</div>
+ </div>
+
+ <div class="btn-row">
+ <button class="btn btn-back" onclick="goBack(2)">← 上一步</button>
+ <button class="btn btn-next" onclick="goNext(2)">下一步 →</button>
+ </div>
+</div>
+
+<!-- ════════════════ STEP 3 ════════════════ -->
+<div class="step" id="step3">
+ <div class="step-tag">Section C</div>
+ <div class="step-title">你對方舟計畫的期待？</div>
+ <div class="step-divider"></div>
+
+ <!-- C1 -->
+ <div class="question" id="q-c1">
+ <div class="q-label"><span class="q-num">C1</span><span>如果方舟現在上線，下面哪兩個功能會讓你今晚就想登入試試？ <span style="color:var(--terracotta)">*</span><span class="max-badge">最多選 2 個</span></span></div>
+ <div class="opts">
+ <label class="opt"><input type="checkbox" name="c1" value="一張展示「我用 AI 做了什麼」的人才卡" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">一張展示「我用 AI 做了什麼」的人才卡</span></span></label>
+ <label class="opt"><input type="checkbox" name="c1" value="活動參與紀錄自動轉成技能點數" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">活動參與紀錄自動轉成技能點數</span></span></label>
+ <label class="opt"><input type="checkbox" name="c1" value="公開作品案例（看別人怎麼做的）" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">公開作品案例（看別人怎麼做的）</span></span></label>
+ <label class="opt"><input type="checkbox" name="c1" value="跨國／遠端機會的曝光管道" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">跨國／遠端機會的曝光管道</span></span></label>
+ <label class="opt"><input type="checkbox" name="c1" value="社群成員之間的背書與推薦" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">社群成員之間的背書與推薦</span></span></label>
+ <label class="opt"><input type="checkbox" name="c1" value="案件牆／任務發布（接案方向）" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">案件牆／任務發布（接案方向）</span></span></label>
+ <label class="opt"><input type="checkbox" name="c1" value="與真實需求方的精準媒合" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">與真實需求方的精準媒合</span></span></label>
+ <label class="opt"><input type="checkbox" name="c1" value="AI 技能實戰挑戰／認證徽章" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">AI 技能實戰挑戰／認證徽章</span></span></label>
+ <label class="opt"><input type="checkbox" name="c1" value="other" data-max="2" onchange="checkMax(this); toggleOther('c1-other', this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">其他</span></span></label>
+ </div>
+ <div class="other-input-wrap" id="c1-other"><input type="text" placeholder="請說明…" id="c1-other-val"></div>
+ <div class="err">此題為必填（至少選 1 個）</div>
+ </div>
+
+ <!-- C2 -->
+ <div class="question" id="q-c2">
+ <div class="q-label"><span class="q-num">C2</span><span>你希望與方舟計畫的關係是？ <span style="color:var(--terracotta)">*</span><span class="max-badge">最多選 2 個</span></span></div>
+ <div class="opts">
+ <label class="opt"><input type="checkbox" name="c2" value="早期觀察者，想收到後續活動消息" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">早期觀察者，想收到後續活動消息</span></span></label>
+ <label class="opt"><input type="checkbox" name="c2" value="早期使用者，想嘗試人才卡、參與認證機制或任何功能" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">早期使用者，想嘗試人才卡、參與認證機制或任何功能</span></span></label>
+ <label class="opt"><input type="checkbox" name="c2" value="早期合作夥伴：技術社群／活動場地／教育平台" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">早期合作夥伴：技術社群／活動場地／教育平台</span></span></label>
+ <label class="opt"><input type="checkbox" name="c2" value="核心團隊候選人（活動企劃／技術工程／設計／HR / PM）" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">核心團隊候選人（活動企劃／技術工程／設計／HR / PM）</span></span></label>
+ <label class="opt"><input type="checkbox" name="c2" value="需求方／企業端：未來可能會找人才" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">需求方／企業端：未來可能會找人才</span></span></label>
+ <label class="opt"><input type="checkbox" name="c2" value="只是來聽講，今天就好" data-max="2" onchange="checkMax(this)"><span class="opt-label"><span class="opt-dot"></span><span class="opt-text">只是來聽講，今天就好</span></span></label>
+ </div>
+ <div class="err">此題為必填（至少選 1 個）</div>
+ </div>
+
+ <!-- C3 -->
+ <div class="question" id="q-c3">
+ <div class="q-label"><span class="q-num">C3</span><span>如果有 30 分鐘的 Coffee Chat，你最想跟我們聊的主題是？</span></div>
+ <textarea class="t-input" name="c3" placeholder="寫下你最想聊的事，或是對方舟的任何想法（選填）" rows="3"></textarea>
+ </div>
+
+ <div class="btn-row">
+ <button class="btn btn-back" onclick="goBack(3)">← 上一步</button>
+ <button class="btn btn-next" onclick="goNext(3)">下一步 →</button>
+ </div>
+</div>
+
+<!-- ════════════════ STEP 4 ════════════════ -->
+<div class="step" id="step4">
+ <div class="step-tag">Section D</div>
+ <div class="step-title">是否願意留下聯絡方式？</div>
+ <div class="step-desc">方舟計畫還在很早期，未來會長成什麼樣子，仰賴每一個今天在現場的人。你剛剛填的每一題，我們都會親自讀與參考。</div>
+ <div class="step-divider"></div>
+
+ <div class="question" id="q-d">
+ <div class="q-label"><span>願意留下聯絡方式，收到方舟後續的消息嗎？ <span style="color:var(--terracotta)">*</span></span></div>
+ <div class="yn-grid">
+ <label class="yn-opt">
+ <input type="radio" name="d_choice" value="yes" onchange="handleYN('yes')">
+ <span class="yn-label">
+ 
+ <span class="yn-text">是，願意</span>
+ </span>
+ </label>
+ <label class="yn-opt">
+ <input type="radio" name="d_choice" value="no" onchange="handleYN('no')">
+ <span class="yn-label">
+ 
+ <span class="yn-text">否，謝謝</span>
+ </span>
+ </label>
+ </div>
+ <div class="err">此題為必填</div>
+ </div>
+
+ <div class="btn-row">
+ <button class="btn btn-back" onclick="goBack(4)">← 上一步</button>
+ <button class="btn btn-next" onclick="goNext(4)">下一步 →</button>
+ </div>
+</div>
+
+<!-- ════════════════ STEP 5 ════════════════ -->
+<div class="step" id="step5">
+ <div class="step-tag">Section E</div>
+ <div class="step-title">聯絡資訊</div>
+ <div class="step-divider"></div>
+
+ <!-- D1 -->
+ <div class="question" id="q-d1">
+ <div class="q-label"><span class="q-num">D1</span><span>Email <span style="color:var(--terracotta)">*</span></span></div>
+ <input type="email" class="t-input" name="d1" placeholder="your@email.com">
+ <div class="err">請填入有效的 Email</div>
+ </div>
+
+ <!-- D2 -->
+ <div class="question" id="q-d2">
+ <div class="q-label"><span class="q-num">D2</span><span>IG、Line 或 LinkedIn（願意提供才填寫）</span></div>
+ <input type="text" class="t-input" name="d2" placeholder="@帳號 或 連結">
+ </div>
+
+ <!-- D3 -->
+ <div class="question" id="q-d3">
+ <div class="q-label"><span class="q-num">D3</span><span>一句話介紹你自己（願意提供才填寫）</span></div>
+ <input type="text" class="t-input" name="d3" placeholder="我是…">
+ </div>
+
+ <div class="btn-row">
+ <button class="btn btn-back" onclick="goBack(5)">← 上一步</button>
+ <button class="btn btn-submit" onclick="submitForm()"> 送出問卷</button>
+ </div>
+</div>
+
+<!-- ════════════════ THANK YOU ════════════════ -->
+<div class="thankyou" id="thankyou">
+ 
+ <h2>問卷已送出，謝謝你！</h2>
+ <p>感謝你今天參加 AI 方舟啟航，並花時間填寫這份問卷。我們會親自閱讀每一份回覆，並在後續與你聯繫。</p>
+ <div class="ty-pills">
+ <span class="ty-pill"> 回覆期：5 個工作天內</span>
+ <span class="ty-pill"> 通知方式：Email</span>
+ <span class="ty-pill"> 將收到初期規劃</span>
+ </div>
+ <div class="ty-quote">「我們不只是在做一個平台，我們在定義 AI 時代的人才語言。」</div>
+</div>
+
+</div><!-- end form-body -->
+
+<script>
+let currentStep = 1;
+const totalSteps = 5;
+
+function updateProgress(step) {
+ for (let i = 1; i <= totalSteps; i++) {
+ const dot = document.getElementById('pd' + i);
+ if (dot) dot.classList.toggle('on', i <= step);
+ }
+ document.getElementById('progress-text').textContent = `第 ${step} 頁，共 ${totalSteps} 頁`;
+}
+
+function showStep(step) {
+ document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+ const el = document.getElementById('step' + step);
+ if (el) el.classList.add('active');
+ updateProgress(step);
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateStep(step) {
+ let valid = true;
+
+ const requiredGroups = {
+ 1: [
+ { type: 'radio', name: 'a0', id: 'q-a0' },
+ { type: 'radio', name: 'a1', id: 'q-a1' },
+ { type: 'checkbox', name: 'a2', id: 'q-a2' },
+ ],
+ 2: [
+ { type: 'radio', name: 'b1', id: 'q-b1' },
+ { type: 'checkbox', name: 'b2', id: 'q-b2' },
+ { type: 'radio', name: 'b3', id: 'q-b3' },
+ ],
+ 3: [
+ { type: 'checkbox', name: 'c1', id: 'q-c1' },
+ { type: 'checkbox', name: 'c2', id: 'q-c2' },
+ ],
+ 4: [
+ { type: 'radio', name: 'd_choice', id: 'q-d' },
+ ],
+ 5: [
+ { type: 'email', name: 'd1', id: 'q-d1' },
+ ],
+ };
+
+ const groups = requiredGroups[step] || [];
+ groups.forEach(g => {
+ const qEl = document.getElementById(g.id);
+ qEl.classList.remove('invalid');
+
+ if (g.type === 'radio') {
+ const checked = document.querySelector(`input[name="${g.name}"]:checked`);
+ if (!checked) { qEl.classList.add('invalid'); valid = false; }
+ } else if (g.type === 'checkbox') {
+ const checked = document.querySelectorAll(`input[name="${g.name}"]:checked`);
+ if (checked.length === 0) { qEl.classList.add('invalid'); valid = false; }
+ } else if (g.type === 'email') {
+ const input = document.querySelector(`input[name="${g.name}"]`);
+ if (!input || !input.value.trim() || !input.value.includes('@')) {
+ qEl.classList.add('invalid'); valid = false;
+ }
+ }
+ });
+
+ return valid;
+}
+
+function goNext(step) {
+ if (!validateStep(step)) {
+ // scroll to first error
+ const firstErr = document.querySelector('.step.active .invalid');
+ if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+ return;
+ }
+ currentStep = step + 1;
+ showStep(currentStep);
+}
+
+function goBack(step) {
+ currentStep = step - 1;
+ showStep(currentStep);
+}
+
+function handleYN(val) {
+ // If "no", skip step 5 and go to thank you
+ if (val === 'no') {
+ document.querySelector('.btn-next[onclick="goNext(4)"]').textContent = '送出問卷 →';
+ document.querySelector('.btn-next[onclick="goNext(4)"]').onclick = function() {
+ if (!validateStep(4)) return;
+ showThankyou();
+ };
+ } else {
+ document.querySelector('.btn-next[onclick^="goNext(4)"]') &&
+ (document.querySelector('.btn-next[onclick^="goNext(4)"]').textContent = '下一步 →');
+ // re-bind
+ const btn = document.querySelector('#step4 .btn-next');
+ btn.textContent = '下一步 →';
+ btn.onclick = function() { goNext(4); };
+ }
+}
+
+function showThankyou() {
+ document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+ document.getElementById('thankyou').classList.add('active');
+ document.getElementById('progress-text').textContent = '完成！';
+ for (let i = 1; i <= totalSteps; i++) {
+ const dot = document.getElementById('pd' + i);
+ if (dot) dot.classList.add('on');
+ }
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+
+ // ── 在這裡加入實際送出邏輯 ──
+ // 例如送到 Google Apps Script：
+ // const data = collectFormData();
+ // fetch('YOUR_APPS_SCRIPT_URL', { method:'POST', body: JSON.stringify(data) });
+}
+
+function submitForm() {
+ if (!validateStep(5)) {
+ const firstErr = document.querySelector('.step.active .invalid');
+ if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+ return;
+ }
+ showThankyou();
+}
+
+function toggleOther(id, el) {
+ const wrap = document.getElementById(id);
+ if (!wrap) return;
+ wrap.style.display = el.checked ? 'block' : 'none';
+}
+
+function checkMax(el) {
+ const max = parseInt(el.dataset.max);
+ const name = el.name;
+ const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+ if (checked.length > max) {
+ el.checked = false;
+ // brief shake on label
+ const label = el.nextElementSibling;
+ label.style.borderColor = 'var(--terracotta)';
+ setTimeout(() => label.style.borderColor = '', 800);
+ }
+}
+
+// init
+updateProgress(1);
+</script>
+</body>
+</html>
