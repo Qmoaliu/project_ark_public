@@ -5,101 +5,143 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>方舟計畫 · AI 跨域產出者問卷</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="preload" href="https://cdn.jsdelivr.net/gh/max32002/maruko-gothic@1.013/webfont/CJK%20JP/MarukoGothicCJKjp-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  @font-face {
+    font-family: 'MarukoGothic';
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    src: url(https://cdn.jsdelivr.net/gh/max32002/maruko-gothic@1.013/webfont/CJK%20JP/MarukoGothicCJKjp-Light.woff2) format("woff2");
+  }
+  @font-face {
+    font-family: 'MarukoGothic';
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url(https://cdn.jsdelivr.net/gh/max32002/maruko-gothic@1.013/webfont/CJK%20JP/MarukoGothicCJKjp-Regular.woff2) format("woff2");
+  }
+  @font-face {
+    font-family: 'MarukoGothic';
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    src: url(https://cdn.jsdelivr.net/gh/max32002/maruko-gothic@1.013/webfont/CJK%20JP/MarukoGothicCJKjp-Medium.woff2) format("woff2");
+  }
+
 :root {
- --mustard: #E8B800;
- --mustard-light: #FFF6CC;
- --mustard-mid: #F5D84A;
- --terracotta: #E85D3A;
- --olive: #6B8E23;
- --dusty-blue: #4A7BA6;
- --beige: #F5F1E8;
- --card: #FDFAF3;
- --dark: #1C1A14;
- --dark2: #2A2720;
- --text: #38342A;
- --muted: #857E6E;
- --border: #DDD6C4;
- --border-focus: #E8B800;
+  /* Brand Tokens */
+  --bg:           #F5F1E8;
+  --paper:        #FFFAF0;
+  --ink:          #1A1A1A;
+  --c1:           #E8B800;
+  --c2:           #E85D3A;
+  --c3:           #6B8E23;
+  --c4:           #9B7BB8;
+  --c5:           #D98C4E;
+  --c6:           #4A7BA6;
+
+  --font-display:  'Bungee', sans-serif;
+  --font-headline: 'MarukoGothic', 'Noto Sans TC', sans-serif;
+  --font-body:     'Noto Sans TC', sans-serif;
+  --font-mono:     'JetBrains Mono', monospace;
+
+  /* Legacy & Helper Mapping */
+  --mustard: #E8B800;
+  --mustard-light: #FFF6CC;
+  --mustard-mid: #F5D84A;
+  --terracotta: #E85D3A;
+  --olive: #6B8E23;
+  --dusty-blue: #4A7BA6;
+  --beige: #F5F1E8;
+  --card: #FFFAF0;
+  --dark: #1A1A1A;
+  --dark2: #0D0D0D;
+  --text: #1A1A1A;
+  --muted: #857E6E;
+  --border: #1A1A1A;
+  --border-focus: #E8B800;
+
+  --border-standard: 2px;
+  --border-card:     2.5px;
+  --r-button:  4px;
+  --r-card:    8px;
+  --r-pill:    999px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
- font-family: 'Noto Sans TC', sans-serif;
- background: var(--beige);
- color: var(--text);
+ font-family: var(--font-body);
+ background: var(--bg);
+ color: var(--ink);
  min-height: 100vh;
+}
+
+/* ── TAPE STRIPE ── */
+.tape {
+ height: 18px;
+ background: repeating-linear-gradient(
+   -8deg,
+   var(--c1) 0px 20px, var(--c2) 20px 40px,
+   var(--c3) 40px 60px, var(--c4) 60px 80px,
+   var(--c5) 80px 100px, var(--c6) 100px 120px
+ );
 }
 
 /* ── HEADER ── */
 .form-header {
- background: var(--dark);
- color: #F0EAD8;
+ background: var(--paper);
+ color: var(--ink);
  padding: 48px 24px 40px;
  text-align: center;
  position: relative;
  overflow: hidden;
-}
-.form-header::before {
- content: '';
- position: absolute; top: -80px; left: -80px;
- width: 260px; height: 260px;
- background: radial-gradient(circle, var(--mustard) 0%, transparent 70%);
- opacity: 0.12; pointer-events: none;
-}
-.form-header::after {
- content: '';
- position: absolute; bottom: -60px; right: -60px;
- width: 200px; height: 200px;
- background: radial-gradient(circle, var(--terracotta) 0%, transparent 70%);
- opacity: 0.12; pointer-events: none;
-}
-.ark-eyebrow {
- display: inline-flex; align-items: center; gap: 6px;
- background: var(--mustard); color: var(--dark);
- font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
- padding: 4px 14px; border-radius: 2px;
- margin-bottom: 20px; text-transform: uppercase;
+ border-bottom: var(--border-card) solid var(--ink);
 }
 .form-header h1 {
- font-family: 'Noto Serif TC', serif;
- font-size: clamp(22px, 5vw, 30px);
- font-weight: 700; line-height: 1.35;
- margin-bottom: 14px;
+ font-family: var(--font-headline);
+ font-size: clamp(24px, 5vw, 34px);
+ font-weight: 900; line-height: 1.35;
+ margin-bottom: 16px;
+ color: var(--ink);
 }
 .form-header p {
- font-size: 14px; color: #A09880;
- max-width: 500px; margin: 0 auto;
- line-height: 1.75;
+ font-size: 14px; color: var(--muted);
+ max-width: 540px; margin: 0 auto;
+ line-height: 1.8;
 }
 
 /* ── PROGRESS ── */
 .progress-wrap {
- background: var(--dark2);
+ background: var(--ink);
+ border-bottom: var(--border-card) solid var(--ink);
  padding: 14px 24px;
  position: sticky; top: 0; z-index: 50;
  display: flex; align-items: center; gap: 14px;
 }
 .progress-dots {
- display: flex; gap: 5px; flex: 1;
+ display: flex; gap: 6px; flex: 1;
 }
 .pdot {
- height: 4px; flex: 1; border-radius: 2px;
- background: rgba(255,255,255,0.12);
+ height: 8px; flex: 1; border-radius: 4px;
+ background: rgba(255,255,255,0.18);
+ border: 1px solid rgba(255,255,255,0.08);
  transition: background 0.4s ease;
 }
-.pdot.on { background: var(--mustard); }
+.pdot.on { background: var(--c1); border-color: var(--c1); }
 .progress-text {
- font-size: 12px; color: #7A7060; white-space: nowrap;
+ font-family: var(--font-mono);
+ font-size: 11px; font-weight: 700; color: #857E6E; white-space: nowrap;
 }
 
 /* ── BODY ── */
 .form-body {
  max-width: 640px;
  margin: 0 auto;
- padding: 36px 20px 100px;
+ padding: 48px 20px 100px;
 }
 
 /* ── STEP ── */
@@ -115,35 +157,44 @@ body {
 
 .step-tag {
  display: inline-block;
- font-size: 11px; font-weight: 700;
- letter-spacing: 0.12em; text-transform: uppercase;
- color: var(--terracotta); margin-bottom: 6px;
+ font-family: var(--font-mono);
+ font-size: 10px; font-weight: 700;
+ letter-spacing: 0.14em; text-transform: uppercase;
+ color: var(--ink);
+ background: var(--c1);
+ padding: 3px 10px;
+ border: var(--border-standard) solid var(--ink);
+ border-radius: var(--r-pill);
+ margin-bottom: 12px;
+ box-shadow: 2px 2px 0 var(--ink);
 }
 .step-title {
- font-family: 'Noto Serif TC', serif;
- font-size: 22px; font-weight: 700;
- color: var(--dark); margin-bottom: 6px;
+ font-family: var(--font-headline);
+ font-size: 24px; font-weight: 900;
+ color: var(--ink); margin-bottom: 8px;
 }
 .step-desc {
- font-size: 13px; color: var(--muted);
- line-height: 1.65; margin-bottom: 28px;
+ font-size: 13.5px; color: var(--muted);
+ line-height: 1.7; margin-bottom: 24px;
 }
 .step-divider {
- height: 1px; background: var(--border);
+ height: 3px; background: var(--ink);
  margin-bottom: 28px;
+ border-radius: 99px;
 }
 
 /* ── QUESTION ── */
-.question { margin-bottom: 30px; }
+.question { margin-bottom: 36px; }
 
 .q-label {
- font-size: 15px; font-weight: 500;
- color: var(--dark); line-height: 1.55;
+ font-family: var(--font-headline);
+ font-size: 16px; font-weight: 700;
+ color: var(--ink); line-height: 1.55;
  margin-bottom: 6px;
  display: flex; gap: 8px; align-items: flex-start;
 }
 .q-num {
- color: var(--mustard); font-weight: 700;
+ color: var(--c2); font-family: var(--font-mono); font-weight: 700;
  font-size: 13px; margin-top: 2px; flex-shrink: 0;
 }
 .q-hint {
@@ -152,7 +203,7 @@ body {
 }
 
 /* ── OPTIONS ── */
-.opts { display: flex; flex-direction: column; gap: 7px; }
+.opts { display: flex; flex-direction: column; gap: 10px; }
 
 .opt { position: relative; }
 .opt input { position: absolute; opacity: 0; width: 0; height: 0; }
@@ -160,39 +211,41 @@ body {
 .opt-label {
  display: flex; align-items: center; gap: 10px;
  padding: 12px 16px;
- background: var(--card);
- border: 1.5px solid var(--border);
- border-radius: 9px;
- font-size: 14px; color: var(--text); line-height: 1.45;
+ background: var(--paper);
+ border: var(--border-standard) solid var(--ink);
+ border-radius: var(--r-card);
+ font-size: 14px; color: var(--ink); line-height: 1.45;
  cursor: pointer;
- transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+ transition: all 0.15s;
+ box-shadow: 2px 2px 0 var(--ink);
 }
 .opt-label:hover {
- border-color: var(--mustard);
  background: #FFFDF0;
- box-shadow: 0 2px 8px rgba(232,184,0,0.08);
+ transform: translate(-1px, -1px);
+ box-shadow: 3px 3px 0 var(--ink);
 }
 .opt input:checked + .opt-label {
- border-color: var(--mustard);
  background: var(--mustard-light);
- color: var(--dark); font-weight: 500;
- box-shadow: 0 2px 8px rgba(232,184,0,0.12);
+ color: var(--ink); font-weight: 700;
+ transform: translate(-2px, -2px);
+ box-shadow: 4px 4px 0 var(--ink);
 }
 
 .opt-dot {
  width: 18px; height: 18px; border-radius: 50%;
- border: 2px solid var(--border); flex-shrink: 0;
+ border: var(--border-standard) solid var(--ink); flex-shrink: 0;
  display: flex; align-items: center; justify-content: center;
  transition: all 0.15s;
+ background: var(--paper);
 }
 .opt input[type="checkbox"] + .opt-label .opt-dot {
- border-radius: 5px;
+ border-radius: 4px;
 }
 .opt input:checked + .opt-label .opt-dot {
- background: var(--mustard); border-color: var(--mustard);
+ background: var(--mustard); border-color: var(--ink);
 }
 .opt input:checked + .opt-label .opt-dot::after {
- content: ''; font-size: 11px; color: var(--dark); font-weight: 800;
+ content: ''; font-size: 11px; color: var(--ink); font-weight: 800;
 }
 
 .opt-emoji { font-size: 17px; flex-shrink: 0; }
@@ -202,22 +255,32 @@ body {
 .other-input-wrap { margin-top: 6px; padding-left: 4px; display: none; }
 .other-input-wrap input {
  width: 100%; padding: 11px 14px;
- border: 1.5px solid var(--border); border-radius: 8px;
+ border: var(--border-standard) solid var(--ink); border-radius: 6px;
  font-size: 14px; font-family: inherit;
- background: var(--card); color: var(--text);
- outline: none; transition: border 0.15s;
+ background: var(--paper); color: var(--ink);
+ outline: none; transition: all 0.15s;
 }
-.other-input-wrap input:focus { border-color: var(--mustard); }
+.other-input-wrap input:focus {
+ border-color: var(--ink);
+ transform: translate(-1px, -1px);
+ box-shadow: 2px 2px 0 var(--ink);
+}
 
 /* ── TEXT / EMAIL INPUT ── */
 .t-input {
  width: 100%; padding: 13px 16px;
- border: 1.5px solid var(--border); border-radius: 9px;
+ border: var(--border-standard) solid var(--ink); border-radius: var(--r-card);
  font-size: 14px; font-family: inherit;
- background: var(--card); color: var(--text);
- outline: none; transition: border 0.15s;
+ background: var(--paper); color: var(--ink);
+ outline: none; transition: all 0.15s;
+ box-shadow: 2px 2px 0 var(--ink);
 }
-.t-input:focus { border-color: var(--mustard); }
+.t-input:focus {
+ border-color: var(--ink);
+ background: #FFFDF8;
+ transform: translate(-1px, -1px);
+ box-shadow: 3px 3px 0 var(--ink);
+}
 textarea.t-input { min-height: 100px; resize: vertical; }
 
 /* ── ERRORS ── */
@@ -234,79 +297,93 @@ textarea.t-input { min-height: 100px; resize: vertical; }
  display: flex; flex-direction: column; align-items: center;
  justify-content: center; gap: 10px;
  padding: 32px 20px;
- background: var(--card); border: 1.5px solid var(--border);
- border-radius: 14px; cursor: pointer; transition: all 0.18s;
+ background: var(--paper); border: var(--border-standard) solid var(--ink);
+ border-radius: var(--r-card); cursor: pointer; transition: all 0.18s;
  text-align: center;
+ box-shadow: 3px 3px 0 var(--ink);
 }
-.yn-label:hover { border-color: var(--mustard); background: #FFFDF0; }
+.yn-label:hover {
+ background: #FFFDF0;
+ transform: translate(-1px, -1px);
+ box-shadow: 4px 4px 0 var(--ink);
+}
 .yn-opt input:checked + .yn-label {
- border-color: var(--mustard); background: var(--mustard-light);
- box-shadow: 0 4px 16px rgba(232,184,0,0.14);
+ background: var(--mustard-light);
+ border-color: var(--ink);
+ transform: translate(-2px, -2px);
+ box-shadow: 5px 5px 0 var(--ink);
 }
 .yn-icon { font-size: 32px; }
-.yn-text { font-size: 16px; font-weight: 600; color: var(--dark); }
+.yn-text { font-family: var(--font-headline); font-size: 16px; font-weight: 900; color: var(--ink); }
 
 /* ── BUTTONS ── */
 .btn-row {
- display: flex; gap: 10px; margin-top: 36px;
- padding-top: 24px; border-top: 1px solid var(--border);
+ display: flex; gap: 12px; margin-top: 36px;
+ padding-top: 24px; border-top: var(--border-standard) solid var(--ink);
 }
 .btn {
- padding: 13px 26px; border-radius: 9px;
- font-size: 14px; font-family: inherit; font-weight: 600;
- cursor: pointer; border: none; transition: all 0.18s;
+ padding: 13px 26px; border-radius: var(--r-button);
+ font-size: 14px; font-family: inherit; font-weight: 700;
+ cursor: pointer; border: var(--border-standard) solid var(--ink); transition: all 0.18s;
 }
-.btn-next { background: var(--mustard); color: var(--dark); flex: 1; }
-.btn-next:hover { background: #D4A800; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,184,0,0.25); }
-.btn-back { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
-.btn-back:hover { border-color: var(--muted); color: var(--text); }
-.btn-submit { background: var(--terracotta); color: #fff; flex: 1; }
-.btn-submit:hover { background: #D44E2C; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,93,58,0.28); }
+.btn-next { background: var(--c1); color: var(--ink); flex: 1; box-shadow: 3px 3px 0 var(--ink); }
+.btn-next:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); }
+.btn-back { background: transparent; color: var(--ink); border: var(--border-standard) solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+.btn-back:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+.btn-submit { background: var(--c2); color: var(--paper); flex: 1; box-shadow: 3px 3px 0 var(--ink); }
+.btn-submit:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); }
 
 /* ── THANK YOU ── */
 .thankyou { display: none; text-align: center; padding: 60px 20px 40px; }
 .thankyou.active { display: block; animation: fadeUp 0.4s ease; }
 .ty-icon { font-size: 60px; margin-bottom: 20px; }
 .thankyou h2 {
- font-family: 'Noto Serif TC', serif;
- font-size: 26px; font-weight: 700;
- color: var(--dark); margin-bottom: 12px;
+ font-family: var(--font-headline);
+ font-size: 26px; font-weight: 900;
+ color: var(--ink); margin-bottom: 12px;
 }
-.thankyou p { font-size: 14px; color: var(--muted); line-height: 1.75; max-width: 420px; margin: 0 auto 28px; }
+.thankyou p { font-size: 14.5px; color: var(--muted); line-height: 1.8; max-width: 440px; margin: 0 auto 28px; }
 .ty-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 28px; }
 .ty-pill {
  display: inline-flex; align-items: center; gap: 6px;
  padding: 8px 16px;
- background: var(--card); border: 1px solid var(--border);
- border-radius: 100px; font-size: 13px; color: var(--text);
+ background: var(--paper); border: var(--border-standard) solid var(--ink);
+ border-radius: var(--r-pill); font-size: 13px; color: var(--ink);
+ font-family: var(--font-mono); font-weight: 700;
+ box-shadow: 2px 2px 0 var(--ink);
 }
 .ty-quote {
- font-family: 'Noto Serif TC', serif;
- font-size: 13px; font-style: italic;
- color: var(--muted); margin-top: 24px;
+ font-family: var(--font-headline);
+ font-size: 15px; font-style: italic; font-weight: 700;
+ color: var(--ink); margin-top: 32px;
+ border-left: 4px solid var(--c1); padding-left: 12px;
+ text-align: left;
 }
 
 /* ── MAX-SELECT badge ── */
 .max-badge {
  display: inline-block;
  background: #E8F0E1; color: var(--olive);
- font-size: 11px; font-weight: 600; padding: 2px 9px;
+ border: 1px solid var(--ink);
+ font-family: var(--font-mono);
+ font-size: 11px; font-weight: 700; padding: 2px 9px;
  border-radius: 4px; margin-left: 6px; vertical-align: middle;
+ box-shadow: 1px 1px 0 var(--ink);
 }
 
 @media (max-width: 480px) {
  .yn-grid { grid-template-columns: 1fr; }
 }
-
-
-
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
+<div class="tape"></div>
 <div class="form-header">
- <div class="ark-eyebrow"> 方舟計畫 · Project Ark</div>
+ <div style="margin-bottom: 24px;">
+  <img src="./方舟_Logo/PNG_透明/ProjectArk_Logo_A1_Horizontal-Right_透明.png" alt="Project Ark Logo" style="height: 48px; max-width: 100%; object-fit: contain;">
+ </div>
  <h1>AI 跨域產出者問卷</h1>
  <p>感謝你今天參加 AI 方舟啟航！這份問卷約 5 分鐘，會幫助我們確認方舟計畫的方向。填完的人會收到方舟計畫的初期規劃與第一批優先試用名單登記，敬請期待！！</p>
 </div>
@@ -567,9 +644,11 @@ textarea.t-input { min-height: 100px; resize: vertical; }
  <span class="ty-pill"> 通知方式：Email</span>
  <span class="ty-pill"> 將收到初期規劃</span>
  </div>
+ <div style="margin: 24px 0 16px;">
+ <a href="https://www.linkedin.com/company/ai-project-ark/" class="btn btn-submit" style="display: inline-block; text-decoration: none; max-width: 320px; width: 100%;">追蹤 AI 方舟計畫 LinkedIn</a>
+ </div>
+ <p style="font-size: 12px; color: var(--muted); margin-bottom: 24px;" id="redirect-msg">將於 3 秒後自動導向...</p>
  <div class="ty-quote">「我們不只是在做一個平台，我們在定義 AI 時代的人才語言。」</div>
- <p style="margin-top:24px;font-size:13px;color:var(--muted)">3 秒後將帶你前往方舟計畫 LinkedIn…</p>
- <script>setTimeout(()=>{ window.location.href='https://www.linkedin.com/company/ai-project-ark/'; }, 3000);</script>
 </div>
 
 </div><!-- end form-body -->
@@ -676,58 +755,76 @@ function handleYN(val) {
  }
 }
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3wUzIbJMM-xLH_hJtldrgh_ht_u_0fqPfQpUC_iu1NEs48tLSE2snXhtNiSc9I8pU/exec';
+function showThankyou() {
+ // 收集資料
+ const data = {
+  a0: getRadio('a0'),
+  a1: getRadio('a1'),
+  a2: getChecked('a2'),
+  b1: getRadio('b1'),
+  b2: getChecked('b2'),
+  b3: getRadio('b3'),
+  c1: getChecked('c1'),
+  c2: getChecked('c2'),
+  c3: document.querySelector('[name="c3"]').value,
+  d_choice: getRadio('d_choice'),
+  d1: document.querySelector('[name="d1"]').value,
+  d2: document.querySelector('[name="d2"]').value,
+  d3: document.querySelector('[name="d3"]').value,
+ };
+
+ // 送出至 Google Sheet
+ fetch('https://script.google.com/macros/s/AKfycbw3wUzIbJMM-xLH_hJtldrgh_ht_u_0fqPfQpUC_iu1NEs48tLSE2snXhtNiSc9I8pU/exec', {
+  method: 'POST',
+  mode: 'no-cors',
+  headers: {
+   'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+ }).catch(err => console.error("Error sending data:", err));
+
+ // 顯示感謝頁與完成狀態
+ document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+ document.getElementById('thankyou').classList.add('active');
+ document.getElementById('progress-text').textContent = '完成！';
+ for (let i = 1; i <= totalSteps; i++) {
+  const dot = document.getElementById('pd' + i);
+  if (dot) dot.classList.add('on');
+ }
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+
+ // 倒數導流至 LinkedIn 專頁
+ let secondsLeft = 3;
+ const redirectMsg = document.getElementById('redirect-msg');
+ const interval = setInterval(() => {
+  secondsLeft--;
+  if (redirectMsg) {
+   redirectMsg.textContent = `將於 ${secondsLeft} 秒後自動導向...`;
+  }
+  if (secondsLeft <= 0) {
+   clearInterval(interval);
+   window.location.href = "https://www.linkedin.com/company/ai-project-ark/";
+  }
+ }, 1000);
+}
 
 function getRadio(name) {
-  const el = document.querySelector(`input[name="${name}"]:checked`);
-  return el ? el.value : '';
+ const el = document.querySelector(`input[name="${name}"]:checked`);
+ return el ? el.value : '';
 }
+
 function getChecked(name) {
-  return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
-    .map(el => el.value).join(', ');
-}
-
-function showThankyou() {
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-  document.getElementById('thankyou').classList.add('active');
-  document.getElementById('progress-text').textContent = '完成！';
-  for (let i = 1; i <= totalSteps; i++) {
-    const dot = document.getElementById('pd' + i);
-    if (dot) dot.classList.add('on');
-  }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  const data = {
-    a0: getRadio('a0') === 'other' ? document.getElementById('a0-other-val').value : getRadio('a0'),
-    a1: getRadio('a1'),
-    a2: getChecked('a2').replace('other', document.getElementById('a2-other-val').value),
-    b1: getRadio('b1'),
-    b2: getChecked('b2').replace('other', document.getElementById('b2-other-val').value),
-    b3: getRadio('b3'),
-    c1: getChecked('c1').replace('other', document.getElementById('c1-other-val').value),
-    c2: getChecked('c2'),
-    c3: document.querySelector('[name="c3"]').value,
-    d_choice: getRadio('d_choice'),
-    d1: document.querySelector('[name="d1"]') ? document.querySelector('[name="d1"]').value : '',
-    d2: document.querySelector('[name="d2"]') ? document.querySelector('[name="d2"]').value : '',
-    d3: document.querySelector('[name="d3"]') ? document.querySelector('[name="d3"]').value : '',
-  };
-
-  fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
+ return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
+  .map(el => el.value).join(', ');
 }
 
 function submitForm() {
-  if (!validateStep(5)) {
-    const firstErr = document.querySelector('.step.active .invalid');
-    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-  showThankyou();
+ if (!validateStep(5)) {
+ const firstErr = document.querySelector('.step.active .invalid');
+ if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+ return;
+ }
+ showThankyou();
 }
 
 function toggleOther(id, el) {
