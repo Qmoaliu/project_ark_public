@@ -297,6 +297,9 @@ textarea.t-input { min-height: 100px; resize: vertical; }
 @media (max-width: 480px) {
  .yn-grid { grid-template-columns: 1fr; }
 }
+
+
+
 </style>
 </head>
 <body>
@@ -672,29 +675,58 @@ function handleYN(val) {
  }
 }
 
-function showThankyou() {
- document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
- document.getElementById('thankyou').classList.add('active');
- document.getElementById('progress-text').textContent = '完成！';
- for (let i = 1; i <= totalSteps; i++) {
- const dot = document.getElementById('pd' + i);
- if (dot) dot.classList.add('on');
- }
- window.scrollTo({ top: 0, behavior: 'smooth' });
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3wUzIbJMM-xLH_hJtldrgh_ht_u_0fqPfQpUC_iu1NEs48tLSE2snXhtNiSc9I8pU/exec';
 
- // ── 在這裡加入實際送出邏輯 ──
- // 例如送到 Google Apps Script：
- // const data = collectFormData();
- // fetch('YOUR_APPS_SCRIPT_URL', { method:'POST', body: JSON.stringify(data) });
+function getRadio(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+function getChecked(name) {
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
+    .map(el => el.value).join(', ');
+}
+
+function showThankyou() {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('thankyou').classList.add('active');
+  document.getElementById('progress-text').textContent = '完成！';
+  for (let i = 1; i <= totalSteps; i++) {
+    const dot = document.getElementById('pd' + i);
+    if (dot) dot.classList.add('on');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const data = {
+    a0: getRadio('a0') === 'other' ? document.getElementById('a0-other-val').value : getRadio('a0'),
+    a1: getRadio('a1'),
+    a2: getChecked('a2').replace('other', document.getElementById('a2-other-val').value),
+    b1: getRadio('b1'),
+    b2: getChecked('b2').replace('other', document.getElementById('b2-other-val').value),
+    b3: getRadio('b3'),
+    c1: getChecked('c1').replace('other', document.getElementById('c1-other-val').value),
+    c2: getChecked('c2'),
+    c3: document.querySelector('[name="c3"]').value,
+    d_choice: getRadio('d_choice'),
+    d1: document.querySelector('[name="d1"]') ? document.querySelector('[name="d1"]').value : '',
+    d2: document.querySelector('[name="d2"]') ? document.querySelector('[name="d2"]').value : '',
+    d3: document.querySelector('[name="d3"]') ? document.querySelector('[name="d3"]').value : '',
+  };
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
 }
 
 function submitForm() {
- if (!validateStep(5)) {
- const firstErr = document.querySelector('.step.active .invalid');
- if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
- return;
- }
- showThankyou();
+  if (!validateStep(5)) {
+    const firstErr = document.querySelector('.step.active .invalid');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  showThankyou();
 }
 
 function toggleOther(id, el) {
